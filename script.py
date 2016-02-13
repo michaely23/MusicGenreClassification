@@ -13,6 +13,8 @@ import scipy.stats as stats
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import zero_one_loss
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.cluster import KMeans
 
 # util functions
 # plot_confusion_matrix from 
@@ -109,5 +111,50 @@ def experiment_learners_random_forest():
 	plt.title('Error as a function of the number of learners')
 	plt.show()
 
+def experiment_neighbors_k_nearest_neighbors():
+	avgError = []
+	x_learners = []
+	for k_neighbors in range(1, 20, 1):
+		k = 10
+		skf = StratifiedKFold(labels,n_folds=k)
+		averageError = 0.0
+		for train_index, test_index in skf:
+		    X_train, X_test = mfcc[:,train_index], mfcc[:,test_index]
+		    y_train, y_test = labels[train_index], labels[test_index]
+		    knc = KNeighborsClassifier(n_neighbors=k_neighbors, weights='distance')
+		    knc.fit(X_train.T,y_train)
+		    y_pred = knc.predict(X_test.T)
+		    error = zero_one_loss(y_pred,y_test)
+		    print error
+		    averageError += (1./k) * error
+		print "Average error: %4.2f%s" % (100 * averageError,'%')
+		avgError.append(averageError)
+		x_learners.append(k_neighbors)
 
-analysis_ideal_random_forest()
+	plt.plot(x_learners, avgError)
+	plt.ylabel('Average Error (k=10)')
+	plt.xlabel('Number of Neighbors')
+	plt.title('Error as a function of the number of neighbors taken into consideration')
+	plt.show()
+
+def analysis_neighbors_k_nearest_neighbors():
+	k = 10
+	skf = StratifiedKFold(labels,n_folds=k)
+	averageError = 0.0
+	k_neighbors = 3
+	avg_cm = np.zeros((len(genres),len(genres)))
+	for train_index, test_index in skf:
+	    X_train, X_test = mfcc[:,train_index], mfcc[:,test_index]
+	    y_train, y_test = labels[train_index], labels[test_index]
+	    knc = KNeighborsClassifier(n_neighbors=k_neighbors, weights='distance')
+	    knc.fit(X_train.T,y_train)
+	    y_pred = knc.predict(X_test.T)
+	    error = zero_one_loss(y_pred,y_test)
+	    avg_cm += confusion_matrix(y_test, y_pred)
+	    print error
+	    averageError += (1./k) * error
+	print "Average error: %4.2f%s" % (100 * averageError,'%')
+	plot_confusion_matrix(avg_cm / k)
+	plt.show()
+
+
