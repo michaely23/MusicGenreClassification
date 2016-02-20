@@ -17,6 +17,8 @@ Music Information Retrieval is a small but growing field, and music genre classi
 
 \section{Our Work}
 \subsection{Description of data and data processing}
+The songs to be classified in our study are 30 second clips, and each song was provided as a set of frame-level features for each frame of a song, for each 20 millisecond frame in the song. Frame level features do not encode temporal variation, which is important for genre classification [3] thus
+Fisher vectors and exemplars were used to aggregate temporal features into a per song feature vector. Of the 10 frame level features, we found MFCC(Mel-Frequency Cepstrum Coefficients) to be the most discriminant for genre classification; however, including other features such as Chroma and Key Strength improved accuracy slightly.
 
 \subsection{Classification Methods}
 
