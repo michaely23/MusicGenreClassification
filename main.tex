@@ -19,21 +19,24 @@ Music Information Retrieval is a small but growing field, and music genre classi
 
 \section{Our Work}
 \subsection{Description of data and data processing}
+The songs in our study are 30 second clips, and each song was provided as a set of frame-level features for each 20 millisecond frame in the song. ``Frame level features do not encode temporal variation, which is important for genre classification''[3] thus Fisher vectors and exemplars were used to aggregate temporal features into a per song feature vector. 
+We performed manual feature selection by observing the discriminant strength of subsets of features on different classifiers; we found MFCC(Mel-Frequency Cepstrum Coefficients) to be the most discriminant feature for genre classification. Other features such as Chroma and Key Strength slightly improved overall accuracy.
 
 \subsection{Classification Methods}
-
-The following 8 different classifiers from the SciKitLearn Python Libraries were used. 
+We used the following 9 different classifiers; eight are from the SciKitLearn Python Libraries and the Neural Net is from Matlab. 
 \begin{enumerate}
     \item \textit{K-nearest-neighbors(KNN)} 
-    \item \textit{Logistic Regression with $l_2$ penalty(LR)} using one-vs-rest scheme for the multi-class classification
-    \item \textit{Chained PCA and Logistic Regression (PCALR)}
-    \item \textit{Support Vector Machine (SVM)} with an exponential kernel function
-    \item \textit{Naive Bayes classifier(NB)} using the Gaussian Naive Bayes algorithm
+    \item \textit{Logistic Regression with $l_2$ penalty(LR)} using one-vs-rest scheme 
+    \item \textit{PCA followed by Logistic Regression (PCALR)}
     \item \textit{Random Forests Classifier}
+    \item \textit{PCA followed by Random Forests classifier}
+    \item \textit{Support Vector Machine (SVM)} with an exponential kernel function
+    \item \textit{Naive Bayes classifier(NB)} using the Multinomial Naive Bayes algorithm
     \item \textit{Decision Trees} 
-    \item \textit{AdaBoost}
+    \item \textit{AdaBoost} with Random Forests as Weak Learners
+    \item \textit{NNet Neural Network} from Matlab
 \end{enumerate}
-
+ 
 \subsection{Evalulation}
 
 \section{Results}
