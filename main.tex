@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
 
 \title{ML1}
 \author{Music Genre Classification}
@@ -14,6 +15,7 @@
 \section{Introduction}
 Music Information Retrieval is a small but growing field, and music genre classification is an important subsection of this field. With the rise of internet services like Pandora, Spotify, and other recommendation systems, the ability for a computer to tag and associate songs has become ever more pressing. Music genre classification is a challenging problem as many songs can be classified under multiple genres. Furthermore, a song is a complex audio wave that must be translated into a digital vector before being classified. This transformation process takes a continuous wave and condenses it down to a vector set, creating some information loss inherent in the problem. In this work, we focus on testing various classification methods, and various features for classifying 30 second music clips into their appropriate genres. This work builds on the work of Tzanetakis and Cook, who published a paper titled "Automatic Musical Genre Classification of Audio Signals," that focuses on the same gtzan dataset that is used in this project. We do a deeper analysis of different classifiers using a similar set of features, analyze the effects of including different features in the classification task, and dissect which genres lead to the highest classification confusion. Through our experiments, we discovered that Blues and Rock are the hardest for our classifiers to isolate from other genres, and thus we report results that both include Blues and Rock as well as exclude those two labels and data subsets. With Blues and Rock, the highest classification accuracy we were able to achieve was 70\%. Without the Blues and Rock data subset, we were able to achieve a 80\% accuracy. 
 \section{Related Work}
+
 
 \section{Our Work}
 \subsection{Description of data and data processing}
@@ -39,11 +41,10 @@ We used the following 9 different classifiers; eight are from the SciKitLearn Py
 We performed stratified 10-fold cross-validation for each classifier. In this procedure, input is divided into 10 random equal size folds. The classifier is then trained on 9 of the folds and tested on a single fold. The accuracy of a classifier is average of the accuracy values achieved when each fold is used as a testing fold.
 \section{Results}
 
-\section{Discussion}
-- Discussion of results, behaviour of classification methods on songs
+\section{Discussion and Conclusion}
+In this work, we compared 10 classification methods to predict the music genre for a particular 30 second clip after converting the audio signal to a digital vector representation of the features we listed above. After performing manual feature selection and picking the most discriminatory features, we also compared the classification methods with and without Rock and Blues data subset entries from the GTZan data set. Considering the confusion matrices and the classification error rates of the different classifiers with and without the Rock and Blues data subsets, the feed forward neural network performs the best on the data including Blues and Rock subsets, and the data excluding Blues and Rock. Including more Frame-level music features in the Fisher Vector creation process helped yield higher accuracy rates for the neural networks. From a human analysis perspective, it makes sense that the most helpful features for the neural net are features that pertain specifically to musical elements in the song. Its conceivable to imagine that humans also recognize genres based on features of these type.
 
-- Summary and conclusion, including extensions
-\section{Conclusion}
+There are a number of directions we could go to improve this work. Seeing as the Neural Network performed the best on this data set, and that the performance of neural networks increases with the increase in training data, gathering more training data could immensely improve accuracy. Furthermore, different types of neural networks may do a better job at capturing the differences between these classes than the standard feed forward neural network. Recurrent Neural Networks and other custom neural networks may provide increased accuracy and are worth trying. Focusing on better feature extraction, it has been mentioned in literature that instrument details about a given song can be greatly beneficial to genre classification. Adding in instrument recognition to our Fisher Vectors may allow further distinction between these classes. However, because Blues and Rock originate from similar roots and form the basis for many of the other genres, instrument details may not help us resolve the issue of mislabeling Blues and Rock.
 
 \section{References}
 -Pedregosa F, Varoquaux G, Gramfort A, Michel V, Thirion B, et al. (2011) Scikit-learn: Machine
