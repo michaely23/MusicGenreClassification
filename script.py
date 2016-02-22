@@ -27,7 +27,7 @@ from sklearn import preprocessing
 # plot_confusion_matrix from 
 # http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
 # genres = ['Blues', 'Classical', 'Country', 'Disco', 'Hiphop', 'Jazz', 'Metal', 'Pop', 'Reggae', 'Rock']
-genres = ['Classical', 'Country', 'Disco', 'Hiphop', 'Jazz', 'Metal', 'Pop', 'Reggae']
+genres = ['Blues', 'Classical', 'Country', 'Disco', 'Hiphop', 'Jazz', 'Metal', 'Pop', 'Reggae', 'Rock']
 def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
@@ -193,7 +193,7 @@ def experiment_pca_random_forest():
     pca = decomposition.PCA()
     rf = RandomForestClassifier(n_estimators=maxLearners, max_depth = maxDepth, warm_start = False)
     pipe = Pipeline(steps=[('pca', pca), ('rf', rf)])
-    n_components = [20]
+    n_components = [60]
     k = 10
     skf = StratifiedKFold(labels,n_folds=k)
     averageError = 0.0
@@ -323,5 +323,5 @@ def analysis_AdaBoostRandomForest():
 #     plt.title('Error as a function of the number of channels in the CNN')
 #     plt.show()
 
-analysis_AdaBoostRandomForest()
+analysis_ideal_random_forest()
 

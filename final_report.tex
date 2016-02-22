@@ -2,6 +2,7 @@
 \usepackage{cos424,times}
 \usepackage{hyperref}
 \usepackage{url}
+\usepackage{float}
 \usepackage{graphicx}
 
 
@@ -41,7 +42,7 @@ The songs in our study are 30 second clips, and each song was provided as a set 
 We performed manual feature selection by observing the discriminant strength of subsets of features on different classifiers; we found MFCC(Mel-Frequency Cepstrum Coefficients) to be the most discriminant feature for genre classification. Other features such as Chroma and Key Strength also slightly improved overall accuracy. 
 
 \subsection{Classification Methods}
-We used the following 9 different classifiers; eight are from the SciKitLearn Python Libraries and the Neural Net is from Matlab. 
+We used the following 8 different classifiers; eight are from the SciKitLearn Python Libraries and the Neural Net is from Matlab. 
 \begin{enumerate}
     \item \textit{K-nearest-neighbors(KNN)} 
     \item \textit{Logistic Regression with $l_2$ penalty(LR)} using one-vs-rest scheme 
@@ -50,74 +51,86 @@ We used the following 9 different classifiers; eight are from the SciKitLearn Py
     \item \textit{PCA followed by Random Forests classifier}
     \item \textit{Support Vector Machine (SVM)} with an exponential kernel function
     \item \textit{Naive Bayes classifier(NB)} using the Multinomial Naive Bayes algorithm
-    \item \textit{Decision Trees} 
     \item \textit{AdaBoost} with Random Forests as Weak Learners
     \item \textit{NNet Neural Network} from Matlab - A feed forward network with a single hidden sigmoid layer containing 50 neurons and an output softmax layer.
 \end{enumerate}
- 
+ Decision Trees were not included as Random Forest builds on the Decision Tree data structure, making checking both seem slightly redundant.
 \subsection{Evalulation}
 We performed stratified 10-fold cross-validation for each classifier. In this procedure, input is divided into 10 random equal size folds. The classifier is then trained on 9 of the folds and tested on a single fold. The accuracy of a classifier is average of the accuracy values achieved when each fold is used as a testing fold.
 
 In addition, we looked at confusion matrices to understand how the error is distributed across labels for each genre category. A confusion matrix is a true labels by predicted labels two dimensional table that counts the number of times a predicted label occurs for a song with a given true label. It provides detailed analysis of where the classifications are missing, and what genres are creating the most misclassification errors.
 
 \section{Results}
-The following error-rates were achieved at the classifiers' optimal parameter settings. Performance was variable across the classifiers with Neural-Nets, K-Nearest Neighbors and Random Forests performing the best. \newline
-\vspace{5mm}
-\vspace{5mm}
-\begin{tabular}{ |p{2cm}|p{2.3cm}|}
-\hline
-\multicolumn{2}{|c|}{\textbf{Classification accuracy}} \\
-\hline
-\textbf{Classifier} & \textbf{Error-rate \%} \\
-\hline
-KNN & 34 \\
-LR & 41  \\
-PCALR & 39 \\
-RF    &  36 \\
-SVM & 46 \\
-NB & 45 \\
-DT & 0 \\
-Ada & 0 \\
-NNet & 26 \\
-\hline
-\end{tabular}
-\textbf{K Nearest-Neighbors}  
-%\begin{figure}[ht!]
-%\centering
-%\includegraphics[width=30mm]{fixed_dome1.jpg}
-%\caption{KNN Confusion Matrix \label{overflow}}
-%\end{figure}
-\vspace{5mm}
-\vspace{5mm}
-\textbf{Logistic Regression}
-\vspace{5mm}
-\vspace{5mm}
-\textbf{PCA + Logisitic Regression} 
-\vspace{5mm}
-\vspace{5mm}
-\textbf{Random Forests}
-\vspace{5mm}
-\vspace{5mm}
-\textbf{PCA + Random Forests} 
-\vspace{5mm}
-\vspace{5mm}
-\begin{tabular}{ |p{2cm}|p{2.3cm}|}
-\hline
-\multicolumn{2}{|c|}{\textbf{Classification accuracy}} \\
-\hline
-\textbf{Classifier} & \textbf{Error-rate \%} \\
-\hline
-KNN & 34 \\
-LR & 41  \\
-PCALR & 39 \\
-RF    &  36 \\
-SVM & 46 \\
-NB & 45 \\
-DT & 0 \\
-Ada & 0 \\
-NNet & 26 \\
-\hline
-\end{tabular}
+We tested the classifiers against a data set containing all ten class labels as well as a data set that did not include Blues and Rock. The following error-rates were achieved at the classifiers' optimal parameter settings against the complete data set. Optimal parameter settings were found by plotting the error-rate vs parameter graph and finding the minimum.  Performance was variable across the classifiers with Neural-Nets, Random Forest and AdaBoost with Random Forests performing the best. \newline
+\begin{center}
+	\begin{tabular}{ |p{2cm}|p{2.3cm}|}
+		\hline
+		\multicolumn{2}{|c|}{\textbf{Classification accuracy}} \\
+		\hline
+		\textbf{Classifier} & \textbf{Error-rate \%} \\
+		\hline
+		KNN & 42 \\
+		LR & 41  \\
+		PCALR & 39 \\
+		\textbf{RF}    &  \textbf{35} \\
+		PCARF & 39 \\
+		SVM & 46 \\
+		NB & 45 \\
+		\textbf{Ada} & \textbf{36} \\
+		\textbf{NNet} & \textbf{26} \\
+		\hline
+	\end{tabular}
+\end{center}
+In order to better understand what the distribution of misclassifications looked like, we took the top classifiers, and created confusion matrices of their classifications. As you can see in the figure below, the confusion matrix for Random Forest Classifier suggests that Blues and Rock both are often mislabeled as another class, while the rest of the genres appear to be far more accurately classified. This trend reappeared for AdaBoost, and NN based classifiers. In order to verify this, we reran the top classifiers with Blues and Rock removed.
+\begin{figure}[!ht]
+\begin{center}
+\begin{minipage}[b]{0.45\linewidth}
+	\caption{Confusion Matrix for Random Forest - With Blues and Rock}
+	\includegraphics[scale=0.35]{ConfusionMatrix-RandomForest.png}
+\end{minipage}
+\quad
+\begin{minipage}[b]{0.45\linewidth}
+	\includegraphics[scale=0.35]{ConfusionMatrix-NN.jpg}
+\end{minipage}
+\end{center}
+\end{figure}
+%\textbf{K Nearest-Neighbors}  
+%%\begin{figure}[ht!]
+%%\centering
+%%\includegraphics[width=30mm]{fixed_dome1.jpg}
+%%\caption{KNN Confusion Matrix \label{overflow}}
+%%\end{figure}
+%\vspace{5mm}
+%\vspace{5mm}
+%\textbf{Logistic Regression}
+%\vspace{5mm}
+%\vspace{5mm}
+%\textbf{PCA + Logisitic Regression} 
+%\vspace{5mm}
+%\vspace{5mm}
+%\textbf{Random Forests}
+%\vspace{5mm}
+%\vspace{5mm}
+%\textbf{PCA + Random Forests} 
+%\vspace{5mm}
+%\vspace{5mm}
+%\begin{tabular}{ |p{2cm}|p{2.3cm}|}
+%\hline
+%\multicolumn{2}{|c|}{\textbf{Classification accuracy}} \\
+%\hline
+%\textbf{Classifier} & \textbf{Error-rate \%} \\
+%\hline
+%KNN & 34 \\
+%LR & 41  \\
+%PCALR & 39 \\
+%RF    &  36 \\
+%SVM & 46 \\
+%NB & 45 \\
+%DT & 0 \\
+%Ada & 0 \\
+%NNet & 26 \\
+%\hline
+%\end{tabular}
 
 \section{Discussion and Conclusion}
 In this work, we compared 10 classification methods to predict the music genre for a particular 30 second clip after converting the audio signal to a digital vector representation of the features we listed above. After performing manual feature selection and picking the most discriminatory features, we also compared the classification methods with and without Rock and Blues data subset entries from the GTZan data set. Considering the confusion matrices and the classification error rates of the different classifiers with and without the Rock and Blues data subsets, the feed forward neural network performs the best on the data including Blues and Rock subsets, and the data excluding Blues and Rock. Including more Frame-level music features in the Fisher Vector creation process helped yield higher accuracy rates for the neural networks. From a human analysis perspective, it makes sense that the most helpful features for the neural net are features that pertain specifically to musical elements in the song. Its conceivable to imagine that humans also recognize genres based on features of these type.
