@@ -32,7 +32,7 @@ Student Researcher \\
 
 \section{Introduction}
 
-Music Information Retrieval is a small but growing field, and music genre classification is an important subsection of this field. With the rise of internet services like Pandora, Spotify, and other recommendation systems, the ability for a computer to tag and associate songs has become ever more pressing. Music genre classification is a challenging problem as many songs can be classified under multiple genres. Furthermore, a song is a complex audio wave that must be translated into a digital vector before being classified. This transformation process takes a continuous wave and condenses it down to a vector set, creating some information loss inherent in the problem. In this work, we focus on testing various classification methods, and various features for classifying 30 second music clips into their appropriate genres. This work builds on the work of Tzanetakis and Cook, who published a paper titled "Automatic Musical Genre Classification of Audio Signals," that focuses on the same gtzan dataset that is used in this project. We do a deeper analysis of different classifiers using a similar set of features, analyze the effects of including different features in the classification task, and dissect which genres lead to the highest classification confusion. Through our experiments, we discovered that Blues and Rock are the hardest for our classifiers to isolate from other genres, and thus we report results that both include Blues and Rock as well as exclude those two labels and data subsets. With Blues and Rock, the highest classification accuracy we were able to achieve was 70\%. Without the Blues and Rock data subset, we were able to achieve a 80\% accuracy. 
+Music genre classification is a challenging problem as many songs can be classified under multiple genres. Furthermore, a song is a complex audio wave that must be translated into a digital vector before being classified. This transformation process takes a continuous wave and condenses it down to a vector set, creating some information loss inherent in the problem. This work builds on the work of Tzanetakis and Cook by doing a deeper analysis of different classifiers using a similar set of features, analyze the effects of including different features in the classification task, and dissect which genres lead to the highest misclassification. Through our experiments, we discovered that Blues and Rock are the hardest for our classifiers to isolate from other genres, and thus we report results that both include Blues and Rock as well as exclude those two labels and data subsets. With Blues and Rock, the highest classification accuracy we were able to achieve was 74\%. Without the Blues and Rock data subset, we were able to achieve a 84\% accuracy.
 
 \section{Related Work}
 
@@ -54,18 +54,16 @@ We used the following 8 different classifiers; eight are from the SciKitLearn Py
     \item \textit{AdaBoost} with Random Forests as Weak Learners
     \item \textit{NNet Neural Network} from Matlab - A feed forward network with a single hidden sigmoid layer containing 50 neurons and an output softmax layer.
 \end{enumerate}
- Decision Trees were not included as Random Forest builds on the Decision Tree data structure, making checking both seem slightly redundant.
+Decision Trees were not included as Random Forest builds on the Decision Tree data structure, making checking both seem  redundant.
 \subsection{Evalulation}
-We performed stratified 10-fold cross-validation for each classifier. In this procedure, input is divided into 10 random equal size folds. The classifier is then trained on 9 of the folds and tested on a single fold. The accuracy of a classifier is average of the accuracy values achieved when each fold is used as a testing fold.
-
-In addition, we looked at confusion matrices to understand how the error is distributed across labels for each genre category. A confusion matrix is a true labels by predicted labels two dimensional table that counts the number of times a predicted label occurs for a song with a given true label. It provides detailed analysis of where the classifications are missing, and what genres are creating the most misclassification errors.
+We performed stratified 10-fold cross-validation for each classifier. In this procedure, input is divided into 10 random equal size folds. The classifier is then trained on 9 of the folds and tested on a single fold. The accuracy of a classifier is average of the accuracy values achieved when each fold is used as a testing fold. In addition, we looked at confusion matrices to understand how the error is distributed across labels for each genre category.
 
 \section{Results}
 We tested the classifiers against a data set containing all ten class labels as well as a data set that did not include Blues and Rock. The following error-rates were achieved at the classifiers' optimal parameter settings against the complete data set. Optimal parameter settings were found by plotting the error-rate vs parameter graph and finding the minimum.  Performance was variable across the classifiers with Neural-Nets, Random Forest and AdaBoost with Random Forests performing the best. \newline
 \begin{center}
 	\begin{tabular}{ |p{2cm}|p{2.3cm}|}
 		\hline
-		\multicolumn{2}{|c|}{\textbf{Classification accuracy}} \\
+		\multicolumn{2}{|c|}{\textbf{Classification accuracy w/ Blues \& Rock}} \\
 		\hline
 		\textbf{Classifier} & \textbf{Error-rate \%} \\
 		\hline
@@ -81,7 +79,7 @@ We tested the classifiers against a data set containing all ten class labels as 
 		\hline
 	\end{tabular}
 \end{center}
-In order to better understand what the distribution of misclassifications looked like, we took the top classifiers, and created confusion matrices of their classifications. As you can see in the figure below, the confusion matrix for Random Forest Classifier suggests that Blues and Rock both are often mislabeled as another class, while the rest of the genres appear to be far more accurately classified. This trend reappeared for AdaBoost, and NN based classifiers. In order to verify this, we reran the top classifiers with Blues and Rock removed.
+In order to better understand what the distribution of misclassifications looked like, we took the top classifiers, and created confusion matrices of their classifications. As you can see in figure 1, the confusion matrix for Random Forest Classifier suggests that Blues and Rock both are often mislabeled as other classes, while the rest of the genres appear to be far more accurately classified. This trend reappeared for AdaBoost, and NN based classifiers. In order to verify this, we reran the top classifiers with Blues and Rock removed.
 \begin{figure}[!ht]
 \begin{center}
 \caption{Confusion Matrix for Random Forest and Neural Network - With Blues and Rock}
@@ -98,7 +96,7 @@ The table below showcases the accuracy rates on the data subset that does not co
 \begin{center}
 	\begin{tabular}{ |p{2cm}|p{2.3cm}|}
 		\hline
-		\multicolumn{2}{|c|}{\textbf{Classification accuracy}} \\
+		\multicolumn{2}{|c|}{\textbf{Classification accuracy w/o Blues or Rock}} \\
 		\hline
 		\textbf{Classifier} & \textbf{Error-rate \%} \\
 		\hline
@@ -116,7 +114,7 @@ The table below showcases the accuracy rates on the data subset that does not co
 \end{center}
 
 \subsection{Parameter Optimization}
-For the purposes of brevity, we will only talk about the parameter optimization for the top 3 classifiers, the feed forward neural network, the random forest classifier, and the AdaBoost classifier. We focused on optimizing the random forest for two of its parameters: max depth and max learners. We manually fiddled with the other parameters once the optimums for these values were selected. To determine the optimum depth and learner values, we graphed the change in error as the value of one (while the other was held constant) was changed from a small value to a relatively large value (or until the curve plateaued). Figure 2 showcases the change in error vs the number of learners and the change in error vs the depth, but in the end, values of 110 and 31 were used for max learners and max depth respectively. The AdaBoost classifier was optimized for the number of estimators and the learning rate. The base estimator used was identified via manual choice, and the one with the lowest error was chosen. Similar to the Random Forest classifier, the optimal values for the number of estimators and the learning rate were chosen by plotting the range of values and identifying the minimum as can be seen in Figure 3. The final values for the AdaBoost classifier's hyperparameters were 10 for the number of estimators and 0.01 for the learning rate. The other parameters for AdaBoost were not ranged, but categorical, and thus were fiddled with and the option that minimized error selected after the optimal hyper parameters were chosen. The feed forward neural network was tried with the following hidden layer sizes: 10, 30, 50, 75, and 100. After trying these values, it was discovered that post 50, the error rate does not decrease significantly but the time needed for the net to converge grows dramatically.
+For the purposes of brevity, we will only talk about the parameter optimization for the top 3 classifiers, the feed forward neural network, the random forest classifier, and the AdaBoost classifier. We focused on optimizing the random forest for two of its parameters: max depth and max learners. In the end, values of 110 and 31 were used for max learners and max depth respectively. The final values for the AdaBoost classifier's hyperparameters were 10 for the number of estimators and 0.01 for the learning rate. The feed forward neural network was tried with the following hidden layer sizes: 10, 30, 50, 75, and 100. After trying these values, it was discovered that post 50, the error rate does not decrease significantly but the time needed for the net to converge grows dramatically.
 \begin{figure}[!ht]
 \begin{center}
 \caption{Error vs Learners and Error vs Max Depth}
