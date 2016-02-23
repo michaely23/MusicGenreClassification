@@ -26,8 +26,8 @@ from sklearn import preprocessing
 # util functions
 # plot_confusion_matrix from 
 # http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
-# genres = ['Blues', 'Classical', 'Country', 'Disco', 'Hiphop', 'Jazz', 'Metal', 'Pop', 'Reggae', 'Rock']
 genres = ['Blues', 'Classical', 'Country', 'Disco', 'Hiphop', 'Jazz', 'Metal', 'Pop', 'Reggae', 'Rock']
+# genres = ['Classical', 'Country', 'Disco', 'Hiphop', 'Jazz', 'Metal', 'Pop', 'Reggae']
 def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
@@ -269,6 +269,33 @@ def experiment_estimators_AdaBoostRandomForest():
     plt.title('Error as a function of the learning rate')
     plt.show()
 
+def experiment_estimators_AdaBoostRandomForest():
+    avgError = []
+    x_learners = []
+    rf = RandomForestClassifier(n_estimators=maxLearners, max_depth = maxDepth, warm_start = False)
+    for k_estimators in range(10,150,10):
+        k = 10
+        skf = StratifiedKFold(labels,n_folds=k)
+        averageError = 0.0
+        for train_index, test_index in skf:
+            X_train, X_test = mfcc[:,train_index], mfcc[:,test_index]
+            y_train, y_test = labels[train_index], labels[test_index]
+            adb = AdaBoostClassifier(base_estimator=rf, n_estimators=k_estimators, learning_rate=0.01)
+            adb.fit(X_train.T,y_train)
+            y_pred = adb.predict(X_test.T)
+            error = zero_one_loss(y_pred,y_test)
+            print error
+            averageError += (1./k) * error
+        print "Average error: %4.2f%s" % (100 * averageError,'%')
+        avgError.append(averageError)
+        x_learners.append(k_estimators)
+    # graph the errors now.
+    plt.plot(x_learners, avgError)
+    plt.ylabel('Average Error (k=10)')
+    plt.xlabel('Number of Estimators')
+    plt.title('Error as a function of the number of estimators')
+    plt.show()
+
 def analysis_AdaBoostRandomForest():
     rf = RandomForestClassifier(n_estimators=maxLearners, max_depth = maxDepth, warm_start = False)
     k = 10
@@ -278,7 +305,7 @@ def analysis_AdaBoostRandomForest():
     for train_index, test_index in skf:
         X_train, X_test = mfcc[:,train_index], mfcc[:,test_index]
         y_train, y_test = labels[train_index], labels[test_index]
-        adb = AdaBoostClassifier(base_estimator=rf, n_estimators=100, learning_rate=0.01)
+        adb = AdaBoostClassifier(base_estimator=rf, n_estimators=10, learning_rate=0.01)
         adb.fit(X_train.T,y_train)
         y_pred = adb.predict(X_test.T)
         error = zero_one_loss(y_pred,y_test)
@@ -323,5 +350,5 @@ def analysis_AdaBoostRandomForest():
 #     plt.title('Error as a function of the number of channels in the CNN')
 #     plt.show()
 
-analysis_ideal_random_forest()
+analysis_AdaBoostRandomForest()
 
